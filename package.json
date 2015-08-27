@@ -1,6 +1,6 @@
 {
   "name": "images-cache",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Cache images as base64 for faster browser display",
   "license": "MIT",
   "repository": "revolunet/images-cache",
@@ -26,7 +26,9 @@
     "tape"
   ],
   "browserify": {
-    "transform": [ "babelify" ]
+    "transform": [
+      "babelify"
+    ]
   },
   "dependencies": {
     "imageurl-base64-revolunet": "1.1.0",
