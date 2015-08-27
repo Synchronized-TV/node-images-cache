@@ -1,0 +1,25 @@
+
+<script src="./dist/index.js"></script>
+
+<script>
+
+var images = [];
+var nb = 3;
+var src = 'http://d264f5ibgzxuos.cloudfront.net/bandwidth/500ko.jpg';
+
+for (var i = 0; i < nb ; i++) {
+  images.push(src + '?r=' + Math.random());
+}
+
+images.push('http://pouet/pouet');
+
+
+imagesCache.load(images).progress(status => {
+  console.log('progress', status);
+}).then(() => {
+  console.log('end');
+  console.log('images[0]', ImagesCache.get(images[0]));
+  console.log('http://pouet.fr', ImagesCache.get('http://pouet.fr'));
+}).done();
+
+</script>
