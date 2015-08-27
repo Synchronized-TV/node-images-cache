@@ -12,6 +12,8 @@ Cache images as base64 for faster browser display
  - store these urls binary content as base64
  - fallback to original url when image not found in cache
 
+:warning: As images are downloaded via AJAX, the remote urls must have [CORS enabled](http://enable-cors.org)
+
 ## QuickStart
 
 ```js
@@ -41,14 +43,14 @@ imagesCache.load(images).progress(status => {
  - **npm run readme** : `node ./node_modules/node-readme/bin/node-readme.js`
  - **npm run test** : `find ./spec -iname '*.spec.js' -exec ./node_modules/.bin/babel-node {} \; | ./node_modules/.bin/tap-spec`
  - **npm run zuul** : `./node_modules/zuul/bin/zuul -- spec/**/*.spec.js`
- - **npm run build** : `./node_modules/.bin/browserify -t babelify ./src/index.js -o ./dist/index.js`
- - **npm run watch** : `./node_modules/.bin/watchify -t babelify ./src/index.js -o ./dist/index.js`
+ - **npm run build** : `./node_modules/.bin/browserify ./src/index.js -o ./dist/index.js`
+ - **npm run watch** : `./node_modules/.bin/watchify ./src/index.js -o ./dist/index.js`
 
 ## Dependencies
 
 Package | Version | Dev
 --- |:---:|:---:
-[imageurl-base64](https://www.npmjs.com/package/imageurl-base64) | 1.0.0 | ✖
+[imageurl-base64-revolunet](https://www.npmjs.com/package/imageurl-base64-revolunet) | 1.1.0 | ✖
 [q](https://www.npmjs.com/package/q) | 1.4.1 | ✖
 [babel](https://www.npmjs.com/package/babel) | 5.6.23 | ✔
 [babel-eslint](https://www.npmjs.com/package/babel-eslint) | 3.1.23 | ✔
@@ -66,7 +68,7 @@ Package | Version | Dev
 
 ## Author
 
-Julien Bouquillon <julien@bouquillon.com> http://github.com/revolunet
+Julien Bouquillon <julien@bouquillon.com> undefined
 
 ## License
 

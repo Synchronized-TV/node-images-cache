@@ -1,5 +1,5 @@
 
-import urlToBase64 from 'imageurl-base64';
+import urlToBase64 from 'imageurl-base64-revolunet';
 import { defer } from 'Q';
 
 class ImagesCache {
@@ -14,7 +14,10 @@ class ImagesCache {
    */
   _addUrlToCache(url) {
     let deferred = defer();
-    urlToBase64(url, function(err, data) {
+    urlToBase64({
+      url: url,
+      withCredentials: false
+    }, function(err, data) {
       if (err) {
         //console.error('unable to load ' + url, err);
         deferred.reject(err);

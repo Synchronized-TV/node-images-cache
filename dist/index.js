@@ -29766,13 +29766,10 @@ function extend() {
 (function (Buffer){
 var request = require("request");
 
-var i2b = function (url, callback) {
+var i2b = function (options, callback) {
     "use strict";
 
-    var options = {
-        uri: url,
-        encoding: "binary"
-    };
+    options.encoding = 'binary';
 
     return request(options, function(e, resp, body) {
         if (e) {
@@ -49984,9 +49981,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _imageurlBase64 = require('imageurl-base64');
+var _imageurlBase64Revolunet = require('imageurl-base64-revolunet');
 
-var _imageurlBase642 = _interopRequireDefault(_imageurlBase64);
+var _imageurlBase64Revolunet2 = _interopRequireDefault(_imageurlBase64Revolunet);
 
 var _Q = require('Q');
 
@@ -50008,7 +50005,10 @@ var ImagesCache = (function () {
     key: '_addUrlToCache',
     value: function _addUrlToCache(url) {
       var deferred = (0, _Q.defer)();
-      (0, _imageurlBase642['default'])(url, function (err, data) {
+      (0, _imageurlBase64Revolunet2['default'])({
+        url: url,
+        withCredentials: false
+      }, function (err, data) {
         if (err) {
           //console.error('unable to load ' + url, err);
           deferred.reject(err);
@@ -50098,4 +50098,4 @@ var imagesCache = new ImagesCache();
 exports['default'] = imagesCache;
 module.exports = exports['default'];
 
-},{"Q":1,"imageurl-base64":205}]},{},[297]);
+},{"Q":1,"imageurl-base64-revolunet":205}]},{},[297]);

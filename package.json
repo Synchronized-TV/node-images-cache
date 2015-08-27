@@ -29,7 +29,7 @@
     "transform": [ "babelify" ]
   },
   "dependencies": {
-    "imageurl-base64": "1.0.0",
+    "imageurl-base64-revolunet": "1.1.0",
     "q": "1.4.1"
   },
   "devDependencies": {
