@@ -1,23 +1,22 @@
 'use strict';
 
 import test from 'tape';
+
 import mockery from 'mockery';
 
 // mock the 'imageurl-base64' module
-const i2bMock = function(options, cb) {
-	if (options.url === 'invalid') {
+const getBase64DataMock = function(url, cb) {
+	if (url === 'invalid') {
 		cb('err');
 		return;
 	}
-  cb(null, {
-		dataUri: dummyData[options.url]
-	});
+  cb(null, dummyData[url]);
 };
 
 mockery.enable({
     warnOnUnregistered: false
 });
-mockery.registerMock('imageurl-base64-revolunet', i2bMock);
+mockery.registerMock('getBase64Data', getBase64DataMock);
 
 const dummyData = {
 	'http://host/dummy.jpg': 'this.is.dummy.base64',
