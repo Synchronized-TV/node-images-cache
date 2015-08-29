@@ -42,7 +42,6 @@ imagesCache.load(images).progress(status => {
 
  - **npm run readme** : `node ./node_modules/node-readme/bin/node-readme.js`
  - **npm run test** : `find ./spec -iname '*.spec.js' -exec ./node_modules/.bin/babel-node {} \; | ./node_modules/.bin/tap-spec`
- - **npm run zuul** : `./node_modules/zuul/bin/zuul -- spec/**/*.spec.js`
  - **npm run build** : `./node_modules/.bin/browserify ./src/index.js -o ./dist/index.js`
  - **npm run watch** : `./node_modules/.bin/watchify ./src/index.js -o ./dist/index.js`
 
@@ -50,7 +49,7 @@ imagesCache.load(images).progress(status => {
 
 Package | Version | Dev
 --- |:---:|:---:
-[imageurl-base64-revolunet](https://www.npmjs.com/package/imageurl-base64-revolunet) | 1.1.0 | ✖
+[browser-request](https://www.npmjs.com/package/browser-request) | 0.3.3 | ✖
 [q](https://www.npmjs.com/package/q) | 1.4.1 | ✖
 [babel](https://www.npmjs.com/package/babel) | 5.6.23 | ✔
 [babel-eslint](https://www.npmjs.com/package/babel-eslint) | 3.1.23 | ✔
@@ -63,7 +62,6 @@ Package | Version | Dev
 [tap-spec](https://www.npmjs.com/package/tap-spec) | 4.0.2 | ✔
 [tape](https://www.npmjs.com/package/tape) | 4.0.0 | ✔
 [watchify](https://www.npmjs.com/package/watchify) | 3.3.1 | ✔
-[zuul](https://www.npmjs.com/package/zuul) | 3.2.0 | ✔
 
 
 ## Author
