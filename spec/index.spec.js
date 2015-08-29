@@ -4,7 +4,12 @@ import test from 'tape';
 
 import mockery from 'mockery';
 
-// mock the 'imageurl-base64' module
+mockery.enable({
+	useCleanCache: true,
+	warnOnUnregistered: false
+});
+
+// mock the 'getBase64Data' function
 const getBase64DataMock = function(url, cb) {
 	if (url === 'invalid') {
 		cb('err');
@@ -13,10 +18,7 @@ const getBase64DataMock = function(url, cb) {
   cb(null, dummyData[url]);
 };
 
-mockery.enable({
-    warnOnUnregistered: false
-});
-mockery.registerMock('getBase64Data', getBase64DataMock);
+mockery.registerMock('./getBase64Data', getBase64DataMock);
 
 const dummyData = {
 	'http://host/dummy.jpg': 'this.is.dummy.base64',

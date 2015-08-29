@@ -1,20 +1,20 @@
-import xhr from 'xhr';
-import btoa from 'btoa';
+import request from 'browser-request';
 
 export default function getBase64Data(uri, callback) {
-  xhr({
-    method: 'GET',
-    uri: uri,
-    responseType: 'arraybuffer'
-  }, function(err, resp, body) {
-    if (resp.statusCode == 200) {
-        if (callback) {
-          var b64 = btoa(String.fromCharCode.apply(null, new Uint8Array(body)));
-          var result = `data:${resp.headers['content-type']};base64,${b64}`;
-          callback(null, result);
-        }
-      } else {
-        callback(resp);
+  request(
+    {
+      url: uri,
+      encoding: null,
+      withCredentials: false
+    }, function (err, response, body) {
+      if (err) {
+        callback(err);
+        return;
       }
-  })
+      var type   = response.headers['content-type'];
+      var base64 = body.toString('base64');
+      var result = `data:${type};base64,${base64}`;
+      callback(null, result);
+    }
+  );
 };
