@@ -1,10 +1,10 @@
-import request from 'browser-request';
+import xhr from 'xhr';
 
 export default function getBase64Data(uri, callback) {
-  request(
+  xhr(
     {
-      url: uri,
-      encoding: null,
+      uri: uri,
+      responseType: 'arraybuffer',
       withCredentials: false
     }, function (err, response, body) {
       if (err) {
@@ -12,7 +12,7 @@ export default function getBase64Data(uri, callback) {
         return;
       }
       var type   = response.headers['content-type'];
-      var base64 = body.toString('base64');
+      var base64 = new Buffer(body, 'binary').toString('base64');
       var result = `data:${type};base64,${base64}`;
       callback(null, result);
     }
