@@ -2049,6 +2049,64 @@ return Q;
 });
 
 },{}],2:[function(require,module,exports){
+'use strict';
+
+var Q = require('q');
+
+/**
+ * Create a Q-limit wrapping function
+ */
+module.exports = function qlimit(maxConcurrency) {
+  var outstandingCount = 0;
+  var queue = [];
+
+  /**
+   * Returns a promise which will resolve when
+   * the concurrency is not saturated
+   */
+  function initialPromise() {
+    if(outstandingCount < maxConcurrency) {
+      outstandingCount++;
+      return Q.resolve();
+    }
+
+    var defer = Q.defer();
+    queue.push(defer);
+    return defer.promise;
+  }
+
+  /**
+   * Called after the factory promise is fulfilled.
+   */
+  function complete() {
+    var next = queue.shift();
+
+    if(next) {
+      next.resolve();
+    } else {
+      outstandingCount--;
+    }
+  }
+
+  /**
+   * Returns a concurrency-limited promise
+   */
+  return function(factory) {
+    return function() {
+      var args = Array.prototype.slice.apply(arguments);
+
+      return initialPromise()
+        .then(function() {
+          return factory.apply(null, args);
+        })
+        .finally(complete);
+
+      };
+  };
+
+};
+
+},{"q":1}],3:[function(require,module,exports){
 "use strict";
 var window = require("global/window")
 var once = require("once")
@@ -2237,7 +2295,7 @@ function createXHR(options, callback) {
 
 function noop() {}
 
-},{"global/window":3,"once":4,"parse-headers":8}],3:[function(require,module,exports){
+},{"global/window":4,"once":5,"parse-headers":9}],4:[function(require,module,exports){
 if (typeof window !== "undefined") {
     module.exports = window;
 } else if (typeof global !== "undefined") {
@@ -2248,7 +2306,7 @@ if (typeof window !== "undefined") {
     module.exports = {};
 }
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -2269,7 +2327,7 @@ function once (fn) {
   }
 }
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var isFunction = require('is-function')
 
 module.exports = forEach
@@ -2317,7 +2375,7 @@ function forEachObject(object, iterator, context) {
     }
 }
 
-},{"is-function":6}],6:[function(require,module,exports){
+},{"is-function":7}],7:[function(require,module,exports){
 module.exports = isFunction
 
 var toString = Object.prototype.toString
@@ -2334,7 +2392,7 @@ function isFunction (fn) {
       fn === window.prompt))
 };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 
 exports = module.exports = trim;
 
@@ -2350,7 +2408,7 @@ exports.right = function(str){
   return str.replace(/\s*$/, '');
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var trim = require('trim')
   , forEach = require('for-each')
   , isArray = function(arg) {
@@ -2382,7 +2440,7 @@ module.exports = function (headers) {
 
   return result
 }
-},{"for-each":5,"trim":7}],9:[function(require,module,exports){
+},{"for-each":6,"trim":8}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -2416,7 +2474,7 @@ function getBase64Data(uri, callback) {
 ;
 module.exports = exports['default'];
 
-},{"xhr":2}],10:[function(require,module,exports){
+},{"xhr":3}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -2434,6 +2492,15 @@ var _q = require('q');
 var _getBase64Data = require('./getBase64Data');
 
 var _getBase64Data2 = _interopRequireDefault(_getBase64Data);
+
+var _qlimit = require('qlimit');
+
+var _qlimit2 = _interopRequireDefault(_qlimit);
+
+var MAX_CONCURRENT_DOWNLOADS = 5;
+
+var downloadLimit = (0, _qlimit2['default'])(MAX_CONCURRENT_DOWNLOADS);
+var getBase64DataPromise = (0, _q.denodeify)(_getBase64Data2['default']);
 
 var ImagesCache = (function () {
   function ImagesCache() {
@@ -2472,21 +2539,27 @@ var ImagesCache = (function () {
         }
       }
 
+      var urlsToFetch = [];
       urls.forEach(function (url) {
         if (!_this.cache[url]) {
           // add resource to cache
-          // always increment counter, even when image load failed
-          (0, _q.denodeify)(_getBase64Data2['default'])(url).then(function (b64) {
-            _this.cache[url] = b64;
-            urlLoaded();
-          })['catch'](function (e) {
-            urlLoaded();
-          });
+          urlsToFetch.push(url);
         } else {
-          // also notify when image already in cache
+          // also notify if image already in cache
           urlLoaded();
         }
       });
+
+      // limit concurrent downloads
+      (0, _q.all)(urlsToFetch.map(downloadLimit(function (url) {
+        // always increment counter, even when download failed
+        return getBase64DataPromise(url).then(function (b64) {
+          _this.cache[url] = b64;
+        })['finally'](function () {
+          urlLoaded();
+        });
+      })));
+
       return deferred.promise;
       // optionaly cache on FS or whatever
       // handle http:// urls
@@ -2522,5 +2595,5 @@ var imagesCache = new ImagesCache();
 exports['default'] = imagesCache;
 module.exports = exports['default'];
 
-},{"./getBase64Data":9,"q":1}]},{},[10])(10)
+},{"./getBase64Data":10,"q":1,"qlimit":2}]},{},[11])(11)
 });
