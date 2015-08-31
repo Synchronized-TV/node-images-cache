@@ -82,3 +82,11 @@ test('load() should send progress notification and resolve', (t) => {
 		t.pass(`promise should finally resolve`);
 	});
 });
+
+test('load() should resolve when no images too', (t) => {
+	imagesCache.clear();
+	t.plan(1);
+	imagesCache.load([]).then(function() {
+		t.pass(`promise should resolve even when no images`);
+	});
+});

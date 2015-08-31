@@ -1,5 +1,5 @@
 
-import { defer, denodeify, all, delay } from 'q';
+import { defer, denodeify, all, when } from 'q';
 import getBase64Data from './getBase64Data';
 import qlimit from 'qlimit';
 
@@ -27,6 +27,9 @@ class ImagesCache {
     let nbImagesLoaded = 0;
     let deferred = defer();
 
+    if (urls.length === 0) {
+      return when();
+    }
     function urlLoaded() {
       nbImagesLoaded++;
       deferred.notify({
